@@ -1,0 +1,18 @@
+section {
+   width: 80%;
+}
+
+.paper {
+   border: 1px solid lightgray;
+   display: inline-block;
+}
+
+pre {
+   
+   padding-left: 20px;
+   border-left: 4px solid lightgray;
+}
+
+#paper-multiple-papers-small {
+   width: 300px;
+}

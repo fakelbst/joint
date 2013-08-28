@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../dist/joint.css" />
+    <link rel="stylesheet" href="tutorial.css" />
+</head>
+<body>
+    <section id="demos">
+
+          <div id="demos-sidebar" class="content-sidebar">
+  <ul>
+    <li><a href="/demos">Demos</a>
+    </li>
+  </ul>
+</div>
+
+
+          <div id="fsa" class="content-container">
+  <h1>Finite State Machines</h1>
+  <div id="paper" class="paper"/>
+</div>
+<script src="../dist/joint.js"></script>
+<script src="../dist/joint.shapes.erd.js"></script>
+<script src="../dist/joint.shapes.fsa.js"></script>
+<script>
+        var graph = new joint.dia.Graph;
+
+        var paper = new joint.dia.Paper({
+            el: $('#paper'),
+            width: 800,
+            height: 600,
+            gridSize: 1,
+            model: graph
+        });
+
+
+
+var erd = joint.shapes.erd;
+
+var element = function(elm, x, y, label) {
+    var cell = new elm({ position: { x: x, y: y }, attrs: { text: { text: label }}});
+    graph.addCell(cell);
+    return cell;
+};
+/*
+var link = function(elm1, elm2) {
+    var myLink = new erd.Line({ source: { id: elm1.id }, target: { id: elm2.id }});
+    graph.addCell(myLink);
+    return myLink;
+};
+*/
+
+        function state(x, y, label) {
+            
+            var cell = new joint.shapes.fsa.EndState({
+                position: { x: x, y: y },
+                size: { width: 60, height: 60 },
+                attrs: { text : { text: label }}
+            });
+            graph.addCell(cell);
+            return cell;
+        };
+
+        function link(source, target, label, vertices) {
+            
+            var cell = new joint.shapes.fsa.Arrow({
+                source: { id: source.id },
+                target: { id: target.id },
+                labels: [{ position: .5, attrs: { text: { text: label || '', 'font-weight': 'bold' } } }],
+                vertices: vertices || []
+            });
+            graph.addCell(cell);
+            return cell;
+        }
+
+        var start = new joint.shapes.fsa.StartState({ position: { x: 50, y: 530 } });
+        graph.addCell(start);
+
+        var code  = state(180, 390, 'code');
+        var slash = state(340, 220, 'slash');
+        var star  = state(600, 400, 'star');
+        var line  = state(190, 100, 'line');
+        var block = state(560, 140, 'block');
+        var uses = element(erd.Relationship, 300, 390, "uses");
+
+        link(start, code,  'start');
+        link(code,  slash, '/');
+        link(slash, code,  'other', [{x: 270, y: 300}]);
+        link(slash, line,  '/');
+        link(line,  code,  'new\n line');
+        link(slash, block, '*');
+        link(block, star,  '*');
+        link(star,  block, 'other', [{x: 650, y: 290}]);
+        link(star,  code,  '/',     [{x: 490, y: 310}]);
+        link(line,  line,  'other', [{x: 115,y: 100}, {x: 250, y: 50}]);
+        link(block, block, 'other', [{x: 485,y: 140}, {x: 620, y: 90}]);
+        link(code,  code,  'other', [{x: 180,y: 500}, {x: 305, y: 450}]);
+    </script>
+
+
+        </section>
+    </body>
+</html>
