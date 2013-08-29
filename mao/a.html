@@ -6,6 +6,12 @@
     <link rel="stylesheet" href="../dist/joint.css" />
     <script src="../dist/joint.js"></script>
     <script src="../plugins/joint.shapes.fsa.js"></script>
+    <script src="../plugins/joint.shapes.chess.js"></script>
+    <script src="../plugins/joint.shapes.devs.js"></script>
+    <script src="../plugins/joint.shapes.erd.js"></script>
+    <script src="../plugins/joint.shapes.org.js"></script>
+    <script src="../plugins/joint.shapes.pn.js"></script>
+    <script src="../plugins/joint.shapes.uml.js"></script>
 </head>
 <body>
     <section id="demos">
@@ -16,6 +22,11 @@
     </div>
     <script>
         var graph = new joint.dia.Graph;
+        var graphLink = new joint.dia.Graph;
+        var graphDevs = new joint.dia.Graph;
+        var graph4 = new joint.dia.Graph;
+        var graph5 = new joint.dia.Graph;
+        var graph6 = new joint.dia.Graph;
 
         var erd = joint.shapes.erd;
         var fsa = joint.shapes.fsa;
@@ -25,9 +36,23 @@
 
         var paper = new joint.dia.Paper({
             el: $('#myholder'),
+            width: 800,
+            height: 400,
+            model: graph
+        });
+
+        var paperLink = new joint.dia.Paper({
+            el: $('#myholder'),
             width: 600,
             height: 200,
-            model: graph
+            model: graphLink
+        });
+
+        var paperDevs = new joint.dia.Paper({
+            el: $('#myholder'),
+            width: 600,
+            height: 200,
+            model: graphDevs
         });
 
         var paperSmall = new joint.dia.Paper({
@@ -36,8 +61,11 @@
             height: 200,
             model: graph
         });
+
         paperSmall.scale(.5);
         paperSmall.$el.css('pointer-events', 'none');
+
+
 
         var rect = new joint.shapes.basic.Rect({
             position: { x: 100, y: 30 },
@@ -45,7 +73,15 @@
             attrs: {  text: { text: 'my box' } }
         });
 
-        var rect3 = new joint.shapes.basic.Circle({
+        var rectPath = new joint.shapes.basic.Path({
+            position: { x: 100, y: 30 },
+        });
+        var rectText = new joint.shapes.basic.Text({
+            position: { x: 100, y: 30 },
+            size: { width: 100, height: 30 },
+            attrs: {  text: { text: 'my box' } }
+        });
+        var rectCircle = new joint.shapes.basic.Circle({
             position: { x: 100, y: 100 },
             size: { width: 100, height: 100 },
             attrs: {  text: { text: 'my box', fill: 'white' } }
@@ -58,13 +94,75 @@
 
         var rect2 = rect.clone();
         rect2.translate(300);
-
+/*
         var link = new joint.dia.Link({
             source: { id: rect.id },
             target: { id: rect2.id }
         });
+*/
+var link = new joint.dia.Link({
+        source: { x: 10, y: 20 },
+        target: { x: 250, y: 20 },
+        attrs: {}
+    });
 
-        graph.addCells([rect, rect2, link, rect3, ss]);
+    link.attr({
+        '.marker-target': { fill: '', d: 'M 10 0 L 0 5 L 10 10 z' }
+    });
+
+    var link2 = new joint.dia.Link({
+        source: { x: 10, y: 60 },
+        target: { x: 250, y: 60 },
+        attrs: {}
+    });
+
+    link2.attr({
+        '.connection': { stroke: '#E74C3C', 'stroke-width': 5 },
+        '.marker-source': { stroke: '#E74C3C', fill: '#E74C3C', d: 'M 10 0 L 0 5 L 10 10 z' },
+        '.marker-target': { stroke: '#E74C3C', fill: '#E74C3C', d: 'M 10 0 L 0 5 L 10 10 z' }
+    });
+
+    var link3 = new joint.dia.Link({
+        source: { x: 10, y: 100 },
+        target: { x: 250, y: 100 },
+        attrs: {}
+    });
+
+
+    var link4 = new joint.dia.Link({
+        source: { x: 300, y: 20 },
+        target: { x: 540, y: 20 },
+        vertices: [{ x: 300, y: 60 }, { x: 400, y: 60 }, { x: 400, y: 20 }],
+        attrs: {}
+    });
+
+    link4.attr({
+        '.connection': { stroke: 'black', 'stroke-width': 2 },
+        '.marker-source': { stroke: 'black', fill: 'black', d: 'M5.5,15.499,15.8,21.447,15.8,15.846,25.5,21.447,25.5,9.552,15.8,15.152,15.8,9.552z' },
+        '.marker-target': { stroke: 'black', fill: 'black', d: 'M5.5,15.499,15.8,21.447,15.8,15.846,25.5,21.447,25.5,9.552,15.8,15.152,15.8,9.552z' }
+    });
+
+
+        var devModel = new joint.shapes.devs.Model({
+            position: { x: 1, y: 1 },
+            size: { width: 40, height: 40 },
+        });
+        var devAtomic = new joint.shapes.devs.Atomic({
+            position: { x: 1, y: 1 },
+            size: { width: 50, height: 50 },
+        });
+        var devCoupled = new joint.shapes.devs.Coupled({
+            position: { x: 1, y: 1 },
+            size: { width: 40, height: 40 },
+        });
+        var devLink = new joint.shapes.devs.Link({
+        });
+
+        graph.addCells([rect, rect2,  rectCircle, rectPath, rectText]);
+        graphLink.addCells([ link, link2, link4]);
+        graphDevs.addCells([devModel, devAtomic, devCoupled]);
+        console.log(rect.toJSON());
+        console.log(link.toJSON());
     </script>
 
     </section>
