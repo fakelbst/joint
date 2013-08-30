@@ -7,6 +7,10 @@ html, body {
    line-height: 22px;
 }
 
+.scalable:hover {
+    opacity: 0.5;
+}
+
 ul {
    margin: 0;
 }

@@ -15,12 +15,27 @@
 </head>
 <body>
     <section id="demos">
-
+    <a onclick="addlink()">link</a>
     <div id="myholder" class="paper"/>
     </div>
     <div id="myholder-small" class="paper"/>
     </div>
     <script>
+        var addlink = function(){
+
+            var cell = new joint.shapes.fsa.Arrow({
+                /*
+                source: { id: source.id },
+                target: { id: target.id },
+                labels: [{ position: .5, attrs: { text: { text: label || '', 'font-weight': 'bold' } } }]
+                vertices: vertices || []
+                */
+            });
+            graph.addCell(cell);
+            return cell;
+
+        };
+
         var graph = new joint.dia.Graph;
         var graphLink = new joint.dia.Graph;
         var graphDevs = new joint.dia.Graph;

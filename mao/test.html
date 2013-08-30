@@ -14,18 +14,22 @@
   <ul>
     <li><a href="/demos">Demos</a>
     </li>
+    <li><a onclick="newTask()">newTask</a>
+    </li>
+    <li><a onclick="newLine()">newLine</a>
+    </li>
   </ul>
 </div>
 
 
           <div id="fsa" class="content-container">
-  <h1>Finite State Machines</h1>
   <div id="paper" class="paper"/>
 </div>
 <script src="../dist/joint.js"></script>
-<script src="../dist/joint.shapes.erd.js"></script>
 <script src="../dist/joint.shapes.fsa.js"></script>
+<script src="../plugins/newTest.js"></script>
 <script>
+        var taskCount = 0;
         var graph = new joint.dia.Graph;
 
         var paper = new joint.dia.Paper({
@@ -36,12 +40,26 @@
             model: graph
         });
 
-        var erd = joint.shapes.erd;
+        var erd = joint.shapes.test;
 
         var element = function(elm, x, y, label) {
             var cell = new elm({ position: { x: x, y: y }, attrs: { text: { text: label }}});
             graph.addCell(cell);
             return cell;
+        };
+
+        var newTask = function(){
+            var sss = element(erd.Entity,1,1,"Taskkk"+taskCount.toString());
+            taskCount++;
+            console.log(sss.id);
+            console.log(sss.id);
+            $(this).bind("click", function(){
+                console.log(354555555555555);
+            });
+        };
+
+        var newLine = function(){
+            link2();
         };
 
         function state(x, y, label) {
@@ -55,6 +73,30 @@
             return cell;
         };
 
+        function link2(source, target, label, vertices) {
+            
+            var cell = new joint.shapes.fsa.Arrow({
+                source: {x: 30,y: 70},
+                target: {x: 200, y: 400},
+                labels: [{ position: .5, attrs: { text: { text: label || '', 'font-weight': 'bold' } } }],
+                vertices: vertices || []
+            });
+            graph.addCell(cell);
+            return cell;
+        }
+
+        function startlink(source, target, label, vertices) {
+            
+            var cell = new joint.shapes.fsa.Arrow({
+                source: {id: source.id },
+                target: {x: 500, y: 200},
+                labels: [{ position: .5, attrs: { text: { text: label || '', 'font-weight': 'bold' } } }],
+                vertices: vertices || []
+            });
+            graph.addCell(cell);
+            return cell;
+        }
+
         function link(source, target, label, vertices) {
             
             var cell = new joint.shapes.fsa.Arrow({
@@ -66,17 +108,29 @@
             graph.addCell(cell);
             return cell;
         }
-
         var start = new joint.shapes.fsa.StartState({ position: { x: 50, y: 530 } });
         graph.addCell(start);
 
+        /*
         var code  = state(180, 390, 'code');
         var slash = state(340, 220, 'slash');
         var star  = state(600, 400, 'star');
         var line  = state(190, 100, 'line');
         var block = state(560, 140, 'block');
-        var uses = element(erd.Relationship, 300, 390, "uses");
+        */
+        var uses = element(erd.Relationship, 1, 1, "if");
+        var oooo = element(erd.Entity, 1, 100, "oooo");
+        var llll = element(erd.Attribute, 1, 300, "lllll");
+        var qqqq = element(erd.WeakEntity, 201, 300, "qqqq");
+        var pppp = element(erd.IdentifyingRelationship, 400, 100, "pppp");
+        var iiii = element(erd.Key, 201, 500, "iiii");
+        var start = element(erd.Multivalued, 400, 10, "start");
+        //var uuuu = element(erd.Derived, 1, 100, "uuuu");
+        //var bbbb = element(erd.Line, 300, 400, "bbbb");
 
+        var jj = link(pppp, iiii,  'start');
+        var jj = startlink(start);
+        /*
         link(start, code,  'start');
         link(code,  slash, '/');
         link(slash, code,  'other', [{x: 270, y: 300}]);
@@ -89,8 +143,11 @@
         link(line,  line,  'other', [{x: 115,y: 100}, {x: 250, y: 50}]);
         link(block, block, 'other', [{x: 485,y: 140}, {x: 620, y: 90}]);
         link(code,  code,  'other', [{x: 180,y: 500}, {x: 305, y: 450}]);
+        */
+        $('#v_57').bind( "mouseover", function() {
+              console.log(333333333333333);
+          });
     </script>
-
 
         </section>
     </body>
