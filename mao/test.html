@@ -18,6 +18,8 @@
     </li>
     <li><a href="javascript:void(0);" onclick="newLine()">newLine</a>
     </li>
+    <li><a href="javascript:void(0);" onclick="newIf()">newIf</a>
+    </li>
     <li><a href="javascript:void(0);" onclick="clearGraph()">Clear</a>
     </li>
   </ul>
@@ -32,7 +34,6 @@
         </ul>
     </div>
 
-
           <div id="fsa" class="content-container">
     <div id="paper" class="paper"/>
     </div>
@@ -43,7 +44,33 @@
 <script src="../dist/joint.shapes.fsa.js"></script>
 <script src="../plugins/newTest.js"></script>
 <script>
-        var taskCount = 0;
+    $(function(){
+        checkLinked();
+    });
+        var updateLastLine = function(){
+
+        }
+
+        var checkLinked = function(){
+            for(var i=0; i<linkCount; i++){
+                if(window['link'+i]){
+                    var c = window['link'+i];
+                    if('x' in c.attributes.source || 'x' in c.attributes.target){
+                        c.attr({'.connection': { stroke: 'red'}, '.marker-target': { stroke: 'red', fill: '#E74C3C', d: 'M 10 0 L 0 5 L 10 10 z' }});
+                    }
+                    else{
+                        c.attr({'.connection': { stroke: 'black'}, '.marker-target': { stroke: 'black', fill: 'black', d: 'M 10 0 L 0 5 L 10 10 z' }});
+
+                    }
+                }
+            }
+        }
+
+</script>
+<script>
+    var taskCount = 0;
+    var linkCount = 1;
+
         var graph = new joint.dia.Graph;
 
         var paper = new joint.dia.Paper({
@@ -53,20 +80,27 @@
             gridSize: 1,
             model: graph
         });
-
-        /*
+        
         var paperSmall = new joint.dia.Paper({
             el: $('#myholder-small'),
             width: 400,
             height: 300,
             model: graph
         });
-        */
+        paperSmall.scale(.5);
+        paperSmall.$el.css('pointer-events', 'none');
 
         var erd = joint.shapes.test;
 
         var element = function(elm, x, y, label) {
             var cell = new elm({ position: { x: x, y: y }, attrs: { text: { text: label }}});
+            /*
+            $(cell).bind("contextmenu",function(e){
+               alert('Context Menu event has fired!');
+               return false;
+           }); 
+           */
+
             graph.addCell(cell);
             return cell;
         };
@@ -76,31 +110,24 @@
             taskCount++;
             console.log(sss);
 
-            /*
-            $(this).bind("mousedown", function(event){
-                    switch (event.which) {
-                        case 1:
-                            console.log('Left mouse button pressed');
-                            break;
-                        case 2:
-                            console.log('Middle mouse button pressed');
-                            break;
-                        case 3:
-                            console.log('Right mouse button pressed');
-                            break;
-                        default:
-                            console.log('You have a strange mouse');
-                    }
-                });
-                */
-                $(this).bind("contextmenu",function(e){
-                   alert('Context Menu event has fired!');
-                   return false;
-                }); 
+            $(this).bind("contextmenu",function(e){
+                e.preventDefault();
+                console.log(22222222222222);
+            }); 
+            checkLinked();
         };
 
+        var newIf = function(){
+            var s = element(erd.Relationship, 200, 200, "if");
+            iflink(s, {x:400,y:400});
+            iflink(s, {x:100,y:400});
+            checkLinked();
+        }
+
         var newLine = function(){
-            link2();
+            window['link'+linkCount] = link2();
+            linkCount++;
+            checkLinked();
         };
 
         function state(x, y, label) {
@@ -115,13 +142,34 @@
         };
 
         function link2(source, target, label, vertices) {
-            
+            console.log(3434343);
             var cell = new joint.shapes.fsa.Arrow({
                 source: {x: 30,y: 70},
                 target: {x: 200, y: 400},
                 labels: [{ position: .5, attrs: { text: { text: label || '', 'font-weight': 'bold' } } }],
                 vertices: vertices || []
             });
+
+            cell.listenTo(cell, 'change', function(e){
+                checkLinked();
+            });
+
+            graph.addCell(cell);
+            return cell;
+        }
+
+        function iflink(source, target, label, vertices) {
+            var cell = new joint.shapes.fsa.Arrow({
+                source: {id: source.id },
+                target: target,
+                labels: [{ position: .5, attrs: { text: { text: label || '', 'font-weight': 'bold' } } }],
+                vertices: vertices || []
+            });
+
+            cell.listenTo(cell, 'change', function(e){
+                checkLinked();
+            });
+
             graph.addCell(cell);
             return cell;
         }
@@ -133,6 +181,11 @@
                 labels: [{ position: .5, attrs: { text: { text: label || '', 'font-weight': 'bold' } } }],
                 vertices: vertices || []
             });
+
+            cell.listenTo(cell, 'change', function(e){
+                checkLinked();
+            });
+
             graph.addCell(cell);
             return cell;
         }
@@ -148,8 +201,6 @@
             graph.addCell(cell);
             return cell;
         }
-        var start = new joint.shapes.fsa.StartState({ position: { x: 50, y: 530 } });
-        graph.addCell(start);
 
         var uses = element(erd.Relationship, 1, 1, "if");
         var oooo = element(erd.Entity, 1, 100, "oooo");
@@ -161,14 +212,13 @@
         //var uuuu = element(erd.Derived, 1, 100, "uuuu");
         //var bbbb = element(erd.Line, 300, 400, "bbbb");
 
-        var gg = link(pppp, iiii,  'start');
-        var jj = startlink(start);
+        var gg = link(pppp, iiii, 'start');
+        var link0 = startlink(start);
 
         var clearGraph = function(){
+            graph.clear();
             var start = element(erd.Multivalued, 400, 10, "start");
             var jj = startlink(start);
-
-            graph.clear();
         }
     </script>
 
